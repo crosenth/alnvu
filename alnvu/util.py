@@ -127,6 +127,14 @@ def reformat(seqs,
         else:
             seqlist.append(cons)
 
+    if seqrange:
+        start, stop = seqrange
+        start -= 1  # seqrange is 1-indexed
+    elif trim_to:
+        start, stop = get_extent(get_seq_from_list(trim_to, seqlist).seq)
+    else:
+        start, stop = 0, len(tabulated)
+
     if compare:
         # replace bases identical to reference; make a copy of the
         # sequence for comparison because the original sequences will
@@ -145,14 +153,6 @@ def reformat(seqs,
                 seqstr = seqdiff(seqstr, compare_to_str, simchar=simchar)
 
             seqlist[i] = Seq(name, seqstr)
-
-    if seqrange:
-        start, stop = seqrange
-        start -= 1  # seqrange is 1-indexed
-    elif trim_to:
-        start, stop = get_extent(get_seq_from_list(trim_to, seqlist).seq)
-    else:
-        start, stop = 0, len(tabulated)
 
     mask = []
     for i, counts in enumerate(tabulated):
